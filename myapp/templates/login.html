@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index.css' %}" />
+<h2 style="color: rgb(14, 17, 19); font-family: Georgia, 'Times New Roman', Times, serif;">Login Page</h2><br>
+{% if messages %}
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    <button class="btn btn-primary" type="submit">Login</button>
+</form><br>
+
+<div>
+<a href="{% url 'social:begin' 'google-oauth2' %}?next=/home/">
+    <button class="btn btn-primary">Login with Google</button><br><br>
+</a>
+</div>
+<p>Don't have an account? <a href="{% url 'signup' %}">Signup here</a></p>
+{% endblock %}

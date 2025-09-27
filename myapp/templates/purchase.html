@@ -1,0 +1,22 @@
+{% load static %}
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+    <title>payment</title>
+</head>
+<body>
+    <div class="stripe">
+    <p id="total_element">The total product price: Rs.{{ total_price }}</p><br>
+    <a href="{% url 'checkout_session' %}"><button class="btn btn-sm btn-primary" style="padding: 10px;">Pay with card</button></a><br><br>
+    <a href="{% url 'phonepay_payment' %}"><button class="btn btn-sm btn-primary" style="padding: 10px;">Pay with PhonePe</button></a>
+
+    </div>
+</body>
+</html>
+
+<script>
+   
+</script>

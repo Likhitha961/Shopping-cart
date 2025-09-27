@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="product-grid">
+    {% for item in cart_items %}
+    <div class="product">
+            <h3>{{item.product_id.name }}</h3>
+            <p id="mytotal_{{item.product_id.id}}">{{ item.item_total }}</p>
+            {% if item.product_id.image %}
+            <img src="{{ item.product_id.image.url }}" alt="{{ item.product_id.name }}">
+            {% endif %}
+            <div class="but">
+            <button onclick="decrement_item_count('{{item.product_id.id}}','{{item.id}}','{{item.product_id.price}}')">-</button>
+            <p id="product_quantity_{{item.product_id.id}}">{{item.quantity}}</p>
+            <button onclick="increment_item_count('{{item.product_id.id}}','{{item.id}}','{{item.product_id.price}}')">+</button><br>
+            </div>
+            <a href="{% url 'removefromcart' item.product_id.id %}"><button type="button" , color: white;>Remove</button></a>
+    </div>
+{% empty %}
+        <div>
+            Your cart is empty.
+            <a href="{% url 'index' %}">Continue shopping</a>
+        </div>
+    {% endfor %}
+</div>
+    
+{% if cart_items%}
+    <div class="mt-4 text-center">
+        <p id="cart_count">The total product count: {{ cart_count }}</p>
+        <p id="total_element">The total product price: Rs.{{ total_price }}</p>
+        <a href="{% url 'shipping_payment' %}"><button id="mybtn" style="text-align: center; padding: 10px; display: inline-block;border: none;border-radius: 5px;cursor: pointer; align-self:center; margin: 0 auto ">Purchase</button></a><br><br>
+        <a href="{% url 'index' %}">Continue shopping</a>
+    </div>
+
+{% endif %}
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    document.getElementById("submit").onclick=function(){
+
+    }
+    function grandtotals(){
+        totalsum=0;
+        totalcount=0;
+        document.querySelectorAll("[id^='mytotal_']").forEach((el)=>
+        {totalsum+=parseInt(el.innerHTML)||0;
+    })
+        document.querySelectorAll("[id^='product_quantity_']").forEach((el)=>{
+        totalcount+=parseInt(el.innerText)||0; 
+    })
+        document.getElementById("total_element").innerText = "The total product price: Rs." + totalsum.toFixed(2);
+        document.getElementById("cart_count").innerText = "The total product count: " + totalcount;
+        document.getElementById("cart-count").innerText = totalcount; // updates <h1> Cart (X)
+        }
+    function updateItemTotal(product_id, price){
+        let item_quantity = document.getElementById("product_quantity_" + product_id);
+        let total_element = document.getElementById("mytotal_" + product_id);
+        let itemtotal=parseInt(item_quantity.innerText);
+        let item_total = (itemtotal * price).toFixed(2);
+        total_element.innerText = item_total; 
+        console.log("Updated total for product", product_id, ":", item_total);
+        grandtotals();
+    }
+    function increment_item_count(product_id,item_id,price){
+        let item_quantity=document.getElementById("product_quantity_"+product_id);
+        let count=parseInt(item_quantity.innerText);
+        count+=1;
+        item_quantity.innerText=count;
+        console.log(item_quantity.innerHTML);
+        updateItemTotal(product_id, parseFloat(price));
+        grandtotals();
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8000/cart/",
+        data: JSON.stringify({count:count,item_id:item_id}),
+        dataType: "application/JSON",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
+        success: function (data) {   
+            console.log("data updated");
+            }
+        });
+    }
+    function decrement_item_count(product_id,item_id,price){
+        let item_quantity=document.getElementById("product_quantity_"+product_id);
+        let count=parseInt(item_quantity.innerText);
+        if(count>1){
+        count-=1;
+        item_quantity.innerText=count;
+        updateItemTotal(product_id, parseFloat(price));
+        grandtotals();
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8000/cart/",
+        data: JSON.stringify({count:count,item_id:item_id}),
+        dataType: "application/JSON",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
+        success: function (data) {   
+            console.log("data updated");
+            }
+        });
+
+    }
+}
+</script>
+
+{% endblock %}

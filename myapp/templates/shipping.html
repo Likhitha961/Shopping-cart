@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+    <title>Document</title>
+</head>
+<body>
+    <div class="hey">
+    <h2>User: {{ username }}</h2><br>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{%url 'purchase_product'}"><button type="submit">PROCEED TO PAY</button></a>
+    </form>
+    </div>
+</body>
+</html>
+{% endblock %}

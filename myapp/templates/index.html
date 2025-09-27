@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="msg" style="color: rgb(9, 10, 9); text-align:center; margin-bottom:20px;"></div>
+<div class="product-grid">
+{% for product in page_obj %}
+<div class="product">
+    <h3>{{ product.name }}</h3>
+    <p>Rs.{{ product.price }}</p>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    <form action="{% url 'addtocart' product.id %}" method="post">
+    {% csrf_token %}
+    <button class="mybtn" type="submit">Add to Cart</button>
+</form>
+</div>
+{% endfor %}
+</div>
+<div class="paginator">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">&laquo;First</a>
+    <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+    {% endif %}
+    <span>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{page_obj.next_page_number}}">Next</a>
+    <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo;</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".mybtn").forEach(button => {
+        button.addEventListener("click", function(e) {
+            e.preventDefault(); 
+            const msg = document.getElementById("msg");
+            msg.textContent = "✅ Product has been added to cart!";
+            setTimeout(() => msg.textContent = "", 4000);
+            this.closest("form").submit();
+        });
+    });
+});
+
+</script>
+{% endblock %}

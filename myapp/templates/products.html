@@ -1,0 +1,23 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block content %}
+    <h1>Products</h1>
+    {% if products %}
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th>Product_name</th>
+            <th>Product_price</th>
+        </tr>
+        {% for p in products %}
+        <tr>
+            <td>{{p.name}}</td>
+            <td>{{p.price}}</td>
+            <td>
+                <a href="{% url 'product_edit' p.id %}" class="btn btn-sm btn-primary">Update</a>
+                <a href="{% url 'product_delete' p.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'basic.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <label>Name</label>
+    <input type="text" name="name" value="{{ product.name}}"><br><br>
+    <label>Price</label>
+    <input type="text" name="price" value="{{ product.price}}"><br><br>
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

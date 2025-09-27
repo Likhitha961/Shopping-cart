@@ -1,0 +1,36 @@
+{% extends 'basic.html'%}
+{% load static %}
+{% block content %}
+<h2>Orders</h2>
+{% if orders %}
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Created at</th>
+            <th>User</th>
+        </tr>
+        </thead>
+        {% for order in orders %}
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product}}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ order.createdat|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.user.username }}</td>
+                <td><a href="{% url 'order_edit' item.id %}" class="btn btn-sm btn-primary">Update</a></td>
+                <td><a href="{% url 'orders_delete' item.id %}" class="btn btn-sm btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            </table>
+{% else %}
+    <p>You haven't ordered anything yet.</p>
+{% endif %}
+{% endblock %}
+
+
+

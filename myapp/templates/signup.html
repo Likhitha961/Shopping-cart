@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block content %}
+<h2 style="font-family: Georgia, 'Times New Roman', Times, serif;">Sign Up</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+<div class="signup">
+<form method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ custom_form.as_p }}
+    <div class="hello">
+        <button type="submit">Sign up</button>
+    </div>
+</form>
+</div>
+
+<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+{% endblock %}
+

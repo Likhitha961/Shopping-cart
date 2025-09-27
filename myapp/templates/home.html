@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %} 
+    <div class="row">
+        <div class="col-sm-12 mb-3">
+            {% if user %}
+            <h4 class="text-center">Welcome {{ user.first_name}}</h4>
+            <p> Your email is {{user.email}} </p>
+            {% if picture %}
+    <img src="{{ picture }}" alt="Profile Picture" width="100">
+            {% endif %}
+
+<p>Email Verified: {{ verified|default:"Unknown" }}</p>
+<p>Locale: {{ locale|default:"Not specified" }}</p>
+<div class="logout">
+    <a href="{% url 'logout' %}"><button>Logout</button></a>
+</div>
+{% else %}
+<p>YOU ARE REQUESTED TO LOGIN FIRST</p>
+<a href="{% url 'login' %}">Login</a>
+
+{% endif %}
+        </div>
+    </div>
+{% endblock %}
